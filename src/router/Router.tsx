@@ -1,22 +1,23 @@
-import React, { PropsWithChildren } from 'react';
+import React, { Component, ComponentType, PropsWithChildren } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import pageModulesByPath from 'router/routeImporter';
-import Order from '../pages/Order';
-import Home from '../pages/Home';
 
 export default function Router({ children, ...props }: PropsWithChildren<any>) {
   console.log(pageModulesByPath, 'pageModulesByPath');
   return (
     <BrowserRouter {...props}>
       {children}
-      {/*todo loop page */}
       <Switch>
-        <Route path="/order">
-          <Order />
-        </Route>
-        <Route path="/">
-          <Home />
-        </Route>
+        {Object.keys(pageModulesByPath).map(filePath => {
+          const routePath = filePath.replace(/^(\.+(\/pages)?)?(\/?.+)\.(js|ts|jsx|tsx)$/, '$3');
+          const routePathWithoutSuffix = routePath.replace(/^(\/.*)\/index/, '$1');
+          const Component = pageModulesByPath[filePath].default as ComponentType<{}>;
+          return (
+            <Route path={routePathWithoutSuffix} key={routePathWithoutSuffix}>
+              <Component />
+            </Route>
+          );
+        })}
       </Switch>
     </BrowserRouter>
   );

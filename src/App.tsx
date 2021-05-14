@@ -10,7 +10,7 @@ function App() {
           <Link to="/order">订单</Link>
         </div>
         <div>
-          <Link to="/">跟我回家</Link>
+          <Link to="/home">跟我回家</Link>
         </div>
       </Router>
     </div>
